@@ -39,6 +39,4 @@ python main.py
 ```
 
 ## Observações
-
-- O arquivo `.env` não deve ser enviado para o Git.
 - Os jobs usam a conexão centralizada em `core/database.py`.
