@@ -1,50 +1,48 @@
+from datetime import date
 from core.database import get_engine
-from core.executor import JobRunner
-from core.checkDay import checkDay
+from core.mailer import OutlookMailer
+from core.envio_control import deve_enviar, marcar_enviado
 
-from jobs.base_salarios import BaseSalariosJob
-from jobs.absenteismo import ControleAbsenteismoJob
-from jobs.atestados import AtestadosJob
-from jobs.cat_emitidas import CatEmitidasJob
-from jobs.horas_trabalhadas import HorasTrabalhadasJob
-from jobs.exames_ocupacionais import ExamesOcupacionaisJob
-from jobs.d2206 import D2206Job
 from jobs.atestados_dia_util import AtestadosUtilJob
 
-# def gerar_datas(inicio, fim):
-#    data_atual = inicio
-#
-#   while data_atual <= fim:
-#       yield data_atual
-#       data_atual += timedelta(days=1)
+
+DESTINATARIOS = ["llima@ecourbis.com.br"]
+COPIA = ["llima@ecourbis.com.br"] 
 
 def main():
-    print("-> Iniciando jobs...\n")
+    print("-> Verificando envio de Atestados...\n")
+
+    if not deve_enviar("atestados"):
+        print("Fora da janela (dia não útil ou já enviado neste mês). Nada a fazer.")
+        return
 
     engine = get_engine()
+    job = AtestadosUtilJob(engine)
+    caminho = job.run()
 
-    # ✅ CORRETO: converter string para datetime
-    # data_inicio = datetime.strptime("2026-04-13", "%Y-%m-%d")
+    if not caminho:
+        print("Relatório não gerado. Envio abortado.")
+        return
 
-    # data_fim = datetime.now()
+    try:
+        OutlookMailer().enviar(
+            para=DESTINATARIOS,
+            cc=COPIA or None,
+            assunto=f"Relatório de Atestados - {date.today():%m/%Y}",
+            corpo="""
+                <p>Olá,</p>
+                <p>Segue em anexo o relatório de atestados do período.</p>
+                <p><em>Enviado automaticamente.</em></p>
+            """,
+            anexos=[caminho],
+        )
+        marcar_enviado("atestados")   # só marca se enviou sem erro
+    except Exception as e:
+        print(f"ERRO no envio: {e}")
+        print("Não marcado — vai tentar de novo no próximo dia útil.")
 
-    jobs = [
-         AtestadosUtilJob(engine)
-        #ControleAbsenteismoJob(engine)
-        # AtestadosJob(engine),
-        # BaseSalariosJob(engine),
-        # CatEmitidasJob(engine),
-        # ExamesOcupacionaisJob(engine),
-        # HorasTrabalhadasJob(engine),
-    ]
+    print("\n✔ Finalizado!")
 
-    if checkDay():
-        jobs.append(AtestadosUtilJob(engine))
-
-    runner = JobRunner(jobs)
-    runner.run_all()
-
-    print("✔ Jobs finalizados!")
 
 if __name__ == "__main__":
     main()
