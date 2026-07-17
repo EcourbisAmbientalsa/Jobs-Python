@@ -6,8 +6,8 @@ from core.envio_control import deve_enviar, marcar_enviado
 from jobs.atestados_dia_util import AtestadosUtilJob
 
 
-DESTINATARIOS = ["llima@ecourbis.com.br"]
-COPIA = ["llima@ecourbis.com.br"] 
+DESTINATARIOS = ["rgarcia@ecourbis.com.br"]
+COPIA = ["llima@ecourbis.com.br", "gcalves@ecourbis.com.br", "bhora@ecourbis.com.br", "rribeiro@ecourbis.com.br"] 
 
 def main():
     print("-> Verificando envio de Atestados...\n")
