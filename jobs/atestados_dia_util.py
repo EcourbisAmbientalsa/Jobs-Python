@@ -30,6 +30,11 @@ class AtestadosUtilJob(TemplateJob):
             base_path=r"C:\Users\llima\Desktop\Relatorios"
         )
 
+    @staticmethod
+    def should_run():
+        hoje = date.today()
+        return hoje.strftime("%Y%m%d") == quinto_dia_util(hoje.year, hoje.month)
+
     def get_query(self):
         hoje = date.today()
 
