@@ -24,16 +24,17 @@ def main():
     engine = get_engine()
 
     # ✅ CORRETO: converter string para datetime
-    # data_inicio = datetime.strptime("2026-04-13", "%Y-%m-%d")
+    #
+    #  data_inicio = datetime.strptime("2026-04-13", "%Y-%m-%d")
 
     # data_fim = datetime.now()
 
     jobs = [
-        ControleAbsenteismoJob(engine),
-        AtestadosJob(engine),
-        BaseSalariosJob(engine),
-        CatEmitidasJob(engine),
-        ExamesOcupacionaisJob(engine),
+        # ControleAbsenteismoJob(engine),
+        # AtestadosJob(engine),
+        # BaseSalariosJob(engine),
+        # CatEmitidasJob(engine),
+        # ExamesOcupacionaisJob(engine),
         HorasTrabalhadasJob(engine),
     ]
 

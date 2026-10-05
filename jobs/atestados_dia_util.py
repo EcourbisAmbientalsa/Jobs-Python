@@ -276,4 +276,4 @@ if __name__ == "__main__":
     job = AtestadosUtilJob(engine)
     job.run()
 
-    print("✔ Relatório finalizado!")
+    print("Relatorio finalizado!")

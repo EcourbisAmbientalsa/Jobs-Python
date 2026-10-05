@@ -44,4 +44,4 @@ class TemplateJob:
 
         df.to_excel(arquivo, index=False)
 
-        print(f"✔ Relatório gerado: {arquivo}")
+        print(f"Relatorio gerado: {arquivo}")
