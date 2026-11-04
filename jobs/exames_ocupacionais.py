@@ -5,8 +5,7 @@ class ExamesOcupacionaisJob(TemplateJob):
     def __init__(self, engine):
         super().__init__(
             engine,
-            "Exames-Ocupacionais",
-            base_path=r"C:\Users\llima\Desktop\Relatorios"
+            "Exames_Ocupacionais",
         )
 
     def get_query(self):

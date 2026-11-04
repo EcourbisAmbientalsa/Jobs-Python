@@ -5,7 +5,6 @@ class ControleAbsenteismoJob(TemplateJob):
         super().__init__(
             engine,
             "Controle_Absenteismo",
-            base_path=r"C:\Users\llima\Desktop\Relatorios"
         )
     def get_query(self):
         return f"""SELECT RA_CODFUNC 'Código da Função'

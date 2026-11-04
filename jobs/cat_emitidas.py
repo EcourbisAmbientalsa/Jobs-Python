@@ -5,8 +5,7 @@ class CatEmitidasJob(TemplateJob):
     def __init__(self, engine):
         super().__init__(
             engine,
-            "Cat-Emitidas",
-            base_path=r"C:\Users\llima\Desktop\Relatorios"
+            "Cat_Emitidas",
         )
     def get_query(self):
         return f"""

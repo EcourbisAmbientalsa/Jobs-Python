@@ -1,46 +1,54 @@
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime
 import os
-import sys
+
+from core.database import _load_env_values
 
 
 class TemplateJob:
-    def __init__(self, engine, nome_arquivo, base_path=None):
+    """
+    As pastas de saída são configuradas SOMENTE no .env (ou variável de ambiente):
+      - RELATORIOS_PATH      -> jobs principais (pasta_do_dia=True)
+            <RELATORIOS_PATH>\\aaaammdd\\<nome>_aaaammdd.xlsx
+      - D2206_PATH, ATESTADOS_UTIL_PATH, ... -> jobs com pasta própria (pasta_do_dia=False)
+            <PASTA>\\<nome>_aaaammdd.xlsx
+    """
+
+    def __init__(self, engine, nome_arquivo,
+                 pasta_do_dia=True, env_path_key="RELATORIOS_PATH"):
 
         self.engine = engine
         self.nome_arquivo = nome_arquivo
-        self.base_path = base_path
+        self.pasta_do_dia = pasta_do_dia
+        self.env_path_key = env_path_key
 
         self.data_execucao = datetime.now()
 
     def get_query(self):
         raise NotImplementedError("Implemente o método get_query()")
 
+    def _resolver_base_path(self):
+        caminho = os.getenv(self.env_path_key) or _load_env_values().get(self.env_path_key)
+        if not caminho:
+            raise RuntimeError(
+                f"Pasta de saída não configurada: defina {self.env_path_key} no arquivo .env"
+            )
+        return caminho
+
     def run(self):
         consulta_sql = self.get_query()
 
         df = pd.read_sql_query(consulta_sql, self.engine)
 
-        data_str = self.data_execucao.strftime("%d-%m-%Y")
+        data_str = self.data_execucao.strftime("%Y%m%d")
 
-        if getattr(sys, 'frozen', False):
-            base_dir = os.path.dirname(sys.executable)
-        else:
-            base_dir = os.getcwd()
-
-        if self.base_path:
-            base_path = self.base_path
-        else:
-            base_path = os.path.join(base_dir, "Relatorios")
-
-        caminho = os.path.join(base_path, self.nome_arquivo)
+        caminho = self._resolver_base_path()
+        if self.pasta_do_dia:
+            caminho = os.path.join(caminho, data_str)
 
         os.makedirs(caminho, exist_ok=True)
 
-        arquivo = os.path.join(
-            caminho,
-            f"{self.nome_arquivo}_{data_str}.xlsx"
-        )
+        arquivo = os.path.join(caminho, f"{self.nome_arquivo}_{data_str}.xlsx")
 
         df.to_excel(arquivo, index=False)
 

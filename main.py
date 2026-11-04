@@ -1,3 +1,5 @@
+import sys
+
 from core.database import get_engine
 from core.executor import JobRunner
 from core.checkDay import checkDay
@@ -30,11 +32,11 @@ def main():
     # data_fim = datetime.now()
 
     jobs = [
-        # ControleAbsenteismoJob(engine),
-        # AtestadosJob(engine),
-        # BaseSalariosJob(engine),
-        # CatEmitidasJob(engine),
-        # ExamesOcupacionaisJob(engine),
+        ControleAbsenteismoJob(engine),
+        AtestadosJob(engine),
+        BaseSalariosJob(engine),
+        CatEmitidasJob(engine),
+        ExamesOcupacionaisJob(engine),
         HorasTrabalhadasJob(engine),
     ]
 
@@ -45,9 +47,14 @@ def main():
         jobs.append(AtestadosUtilJob(engine))
 
     runner = JobRunner(jobs)
-    runner.run_all()
+    falhas = runner.run_all()
+
+    if falhas:
+        print(f"ERROR: {len(falhas)} job(s) falharam: {', '.join(falhas)}")
+        return 1
 
     print("✔ Jobs finalizados!")
+    return 0
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

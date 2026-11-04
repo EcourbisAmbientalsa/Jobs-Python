@@ -8,7 +8,6 @@ class AtestadosJob(TemplateJob):
         super().__init__(
             engine,
             "Atestados",
-            base_path=r"C:\Users\llima\Desktop\Relatorios"
         )
 
     def get_query(self):
@@ -81,7 +80,7 @@ class AtestadosJob(TemplateJob):
         
             CASE
                 WHEN LTRIM(RTRIM(SRA.RA_FILIAL)) = '1' THEN 'Op.Sul'
-                WHEN LTRIM(RTRIM(SRA.RA_FILIAL)) = '2' THEN 'Leste'CNTA121
+                WHEN LTRIM(RTRIM(SRA.RA_FILIAL)) = '2' THEN 'Leste'
                 ELSE LTRIM(RTRIM(SRA.RA_FILIAL))
             END AS [Unidade],
         

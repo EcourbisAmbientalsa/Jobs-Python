@@ -5,8 +5,7 @@ class HorasTrabalhadasJob(TemplateJob):
     def __init__(self, engine):
         super().__init__(
             engine,
-            "Horas-Trabalhadas",
-            base_path=r"C:\Users\llima\Desktop\Relatorios"
+            "Horas_Trabalhadas",
         )
     def get_query(self):
         return f"""

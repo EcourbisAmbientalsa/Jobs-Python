@@ -3,12 +3,11 @@ from core.template import TemplateJob
 class BaseSalariosJob(TemplateJob):
 
     def __init__(self, engine):
-        def __init__(self, engine):
-            super().__init__(
-                engine,
-                "Base-Salários",
-                base_path=r"C:\Users\llima\Desktop\Relatorios"
-            )
+        super().__init__(
+            engine,
+            "Base_Salários",
+        )
+
     def get_query(self):
         return f"""
             SELECT DISTINCT

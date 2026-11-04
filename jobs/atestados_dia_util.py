@@ -27,7 +27,8 @@ class AtestadosUtilJob(TemplateJob):
         super().__init__(
             engine,
             "Atestados-Dia-útil",
-            base_path=r"C:\Users\llima\Desktop\Relatorios"
+            pasta_do_dia=False,
+            env_path_key="ATESTADOS_UTIL_PATH",
         )
 
     @staticmethod

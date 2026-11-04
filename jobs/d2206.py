@@ -4,17 +4,11 @@ from datetime import datetime
 
 class D2206Job(TemplateJob):
     def __init__(self, engine):
-
-        data_atual = datetime.now().strftime("%d-%m-%Y")
-
         super().__init__(
             engine,
             "Relatorio_2206",
-            base_path=r"C:\Users\llima\Desktop\Relatorios",
-            subpastas=[
-                "Relatorios Semanais",
-                "Relatorio_2206"
-            ]
+            pasta_do_dia=False,
+            env_path_key="D2206_PATH",
         )
 
     def get_query(self):
