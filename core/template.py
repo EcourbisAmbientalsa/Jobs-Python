@@ -1,5 +1,5 @@
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 from core.database import _load_env_values
@@ -9,7 +9,7 @@ class TemplateJob:
     """
     As pastas de saída são configuradas SOMENTE no .env (ou variável de ambiente):
       - RELATORIOS_PATH      -> jobs principais (pasta_do_dia=True)
-            <RELATORIOS_PATH>\\aaaammdd\\<nome>_aaaammdd.xlsx
+            <RELATORIOS_PATH>\\aaaammdd(D-1)\\<nome>_aaaammdd.xlsx
       - D2206_PATH, ATESTADOS_UTIL_PATH, ... -> jobs com pasta própria (pasta_do_dia=False)
             <PASTA>\\<nome>_aaaammdd.xlsx
     """
@@ -44,7 +44,9 @@ class TemplateJob:
 
         caminho = self._resolver_base_path()
         if self.pasta_do_dia:
-            caminho = os.path.join(caminho, data_str)
+            # A pasta dos jobs principais leva a data do dia anterior (D-1).
+            data_pasta = (self.data_execucao - timedelta(days=1)).strftime("%Y%m%d")
+            caminho = os.path.join(caminho, data_pasta)
 
         os.makedirs(caminho, exist_ok=True)
 
